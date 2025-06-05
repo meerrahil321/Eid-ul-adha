@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eid Mubarak! Wishing You Joy</title>
+
+    <!-- Open Graph meta tags for better social sharing previews (e.g., WhatsApp) -->
+    <!-- These tags are read by WhatsApp and other social media crawlers. -->
+    <!-- They define the title, description, and image that appear when the link is shared. -->
+    <meta property="og:title" content="Eid Mubarak! A Personal Greeting">
+    <meta property="og:description" content="Create and share your own personalized Eid wish! May this Eid bring joy, peace, and prosperity to all.">
+    <meta property="og:image" content="eid.gif"> <!-- This will be the thumbnail image in the share preview -->
+    <meta property="og:url" content=""> <!-- This will be dynamically set by JS to include the user's name -->
+    <meta property="og:type" content="website">
+
+    <!-- Google Fonts for festive and clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Define CSS Variables for easy theme management */
+        :root {
+            --primary-color: #ff99aa; /* Soft pink/red for warmth */
+            --secondary-color: #ffddaa; /* Soft orange/yellow for brightness */
+            --accent-color: #aaddff; /* Soft blue for contrast/coolness */
+            --text-color: #f0f0f0; /* Off-white for readability on dark background */
+            --bg-color-dark: #1a0f28; /* Deep festive background */
+            --bg-color-light: #3f2066; /* Lighter festive background blend */
+            --border-glow: rgba(255, 255, 255, 0.3); /* Subtle white border glow */
+            --button-gradient-start: #FF6B6B; /* Red for button start */
+            --button-gradient-end: #FFC94A; /* Orange for button end */
+            --whatsapp-green-start: #25D366; /* Standard WhatsApp green */
+            --whatsapp-green-end: #128C7E; /* Darker WhatsApp green */
+        }
+
+        /* Base styles for the entire page */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-color-dark) 0%, var(--bg-color-light) 100%);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            box-sizing: border-box; /* Include padding and border in element's total width/height */
+        }
+
+        /* Main container for the Eid greeting card */
+        .container {
+            background: rgba(255, 255, 255, 0.05); /* Glassmorphism effect: translucent white */
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for glass effect */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Stronger shadow for depth */
+            backdrop-filter: blur(10px); /* Blur effect for glassmorphism */
+            -webkit-backdrop-filter: blur(10px); /* Webkit prefix for blur */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 20px; /* Margin around the container for smaller screens */
+            max-width: 90%; /* Max width for responsiveness */
+            width: 500px; /* Fixed width for larger screens */
+            text-align: center;
+            animation: fadeInContainer 1.5s ease-out forwards; /* Fade-in animation */
+        }
+
+        /* Animation for the container to fade in on load */
+        @keyframes fadeInContainer {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styling for the responsive GIF image */
+        .eid-gif {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); /* Initial subtle glow */
+            animation: pulseGlow 2s infinite alternate; /* Pulsing glow animation */
+        }
+
+        /* Animation for the GIF's pulsing glow effect */
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px var(--primary-color); }
+            to { box-shadow: 0 0 25px rgba(255, 255, 255, 0.3), 0 0 40px var(--secondary-color); }
+        }
+
+        /* Styling for the main greeting text */
+        .greeting-text {
+            font-family: 'Pacifico', cursive; /* Festive cursive font */
+            font-size: clamp(1.8rem, 5vw, 3rem); /* Responsive font size (min, viewport-based, max) */
+            margin-bottom: 30px;
+            line-height: 1.3;
+            text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--secondary-color); /* Initial text shadow */
+            opacity: 0; /* Hidden initially for fade-in */
+            animation: fadeInText 2s ease-out 0.5s forwards; /* Delayed fade-in animation */
+        }
+
+        /* Animation for the greeting text to fade in */
+        @keyframes fadeInText {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Apply gradient to specific parts of the text */
+        .greeting-text .gradient-text {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text; /* Clip background to text shape */
+            -webkit-text-fill-color: transparent; /* Make text transparent to show background */
+        }
+        
+        /* Add an additional glow to the gradient text for emphasis */
+        .greeting-text .gradient-text.glow {
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7), 0 0 25px var(--primary-color), 0 0 35px var(--secondary-color);
+        }
+
+        /* Section containing the input field and generate button */
+        .input-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Space between input and button */
+            margin-bottom: 30px;
+        }
+
+        /* Styling for the user name input field */
+        .name-input {
+            width: calc(100% - 30px); /* 100% minus horizontal padding */
+            padding: 15px;
+            border: 2px solid var(--border-glow); /* Initial border */
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1); /* Translucent background */
+            color: var(--text-color);
+            font-size: 1rem;
+            outline: none; /* Remove default focus outline */
+            transition: all 0.3s ease; /* Smooth transitions for focus/hover */
+            text-align: center;
+        }
+
+        .name-input::placeholder {
+            color: rgba(255, 255, 255, 0.7); /* Lighter placeholder text */
+        }
+
+        .name-input:focus {
+            border-color: var(--accent-color); /* Highlight border on focus */
+            box-shadow: 0 0 15px var(--accent-color); /* Glow effect on focus */
+            background: rgba(255, 255, 255, 0.2); /* Slightly more opaque background on focus */
+        }
+
+        /* General styling for action buttons */
+        .action-button {
+            width: 100%;
+            padding: 15px 25px;
+            border: 2px solid transparent; /* Base for border-image outline */
+            border-image: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) 1; /* Gradient outline */
+            border-radius: 10px;
+            background: linear-gradient(45deg, var(--button-gradient-start), var(--button-gradient-end)); /* Gradient background */
+            color: var(--text-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.4s ease; /* Smooth transitions for hover/active */
+            position: relative; /* For the subtle shimmer effect */
+            overflow: hidden;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); /* Shadow for depth */
+        }
+
+        /* Shimmer effect on button hover */
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .action-button:hover::before {
+            left: 100%; /* Move shimmer across the button */
+        }
+
+        .action-button:hover {
+            background: linear-gradient(45deg, var(--button-gradient-end), var(--button-gradient-start)); /* Reverse gradient on hover */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 20px var(--primary-color); /* Enhanced shadow and glow */
+            transform: translateY(-3px); /* Slight lift effect */
+        }
+
+        .action-button:active {
+            transform: translateY(0); /* Press effect */
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Specific styling for the WhatsApp share button */
+        .share-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Space between text and icon */
+            background: linear-gradient(45deg, var(--whatsapp-green-start), var(--whatsapp-green-end)); /* WhatsApp specific gradient */
+            border-image: none; /* Override parent border-image */
+            border: 2px solid var(--whatsapp-green-end); /* Solid border matching gradient end */
+            margin-top: 15px; /* Space above share button */
+        }
+
+        .share-button:hover {
+            background: linear-gradient(45deg, var(--whatsapp-green-end), var(--whatsapp-green-start)); /* Reverse gradient on hover */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 20px var(--whatsapp-green-start); /* WhatsApp green glow */
+        }
+        
+        .whatsapp-icon {
+            font-size: 1.3em; /* Larger icon */
+            vertical-align: middle; /* Align with text */
+        }
+
+        /* Styling for the generated custom greeting message */
+        .custom-greeting-output {
+            background: rgba(255, 255, 255, 0.08); /* Slightly darker glassmorphism for output */
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px; /* Space above output */
+            width: calc(100% - 40px); /* Account for padding */
+            font-size: 1.1rem;
+            line-height: 1.5;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Subtle text shadow */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); /* Inner shadow for depth */
+            display: none; /* Hidden by default */
+            opacity: 0; /* Hidden for fade-in effect */
+            animation: fadeInOutput 0.8s ease-out forwards; /* Fade-in animation */
+            word-wrap: break-word; /* Ensure long names wrap */
+        }
+
+        /* Animation for the custom greeting output to fade in */
+        @keyframes fadeInOutput {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Audio controls styling */
+        .audio-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 10px 15px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100; /* Ensure it's above other elements */
+            transition: all 0.3s ease;
+        }
+
+        .audio-controls:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .audio-icon {
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .audio-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .volume-slider {
+            width: 80px;
+            -webkit-appearance: none; /* Hide default slider */
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--accent-color);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--accent-color);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .volume-slider:hover::-webkit-slider-thumb {
+            background: white;
+            box-shadow: 0 0 8px white;
+        }
+
+        .volume-slider:hover::-moz-range-thumb {
+            background: white;
+            box-shadow: 0 0 8px white;
+        }
+
+        /* Ad specific styling */
+        .ad-container {
+            width: 100%; /* Take full width of parent */
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center vertically if ad height varies */
+            margin: 20px 0; /* Add some vertical spacing */
+            min-height: 60px; /* Reserve space for the ad, matching height specified */
+            overflow: hidden; /* Prevent ad content from breaking layout */
+            background: rgba(0, 0, 0, 0.1); /* Subtle background for ad container */
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            /* Important: Ensure this container can fit the ad unit.
+               For 468px wide ads, on screens smaller than 468px,
+               the ad network script usually handles scaling, but explicit overflow: hidden helps. */
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                margin: 15px;
+            }
+
+            .greeting-text {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+
+            .name-input, .action-button {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            .custom-greeting-output {
+                font-size: 1rem;
+                padding: 12px;
+            }
+
+            .audio-controls {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            .audio-icon {
+                font-size: 1rem;
+            }
+
+            .volume-slider {
+                width: 60px;
+            }
+            
+            /* Ad container adjustments for smaller screens */
+            .ad-container {
+                margin: 15px 0;
+                /* On small screens, fixed width 468px ad might break layout. 
+                   The ad network needs to handle serving smaller ads or scaling.
+                   A max-width might make it fit, but content inside iframe won't resize unless responsive ads are served. */
+                max-width: 100%; /* Ensures the container itself doesn't overflow */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="audio-controls">
+        <span id="audioIcon" class="audio-icon">🔈</span>
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="0.5">
+        <audio id="backgroundMusic" src="song.mp3" loop autoplay></audio>
+    </div>
+
+    <div class="container">
+        <img src="eid.gif" alt="Eid Mubarak Greeting" class="eid-gif">
+
+        <!-- Ad Code - Middle Placement -->
+        <!-- Placed after the GIF and before the main greeting text. -->
+        <div class="ad-container">
+            <script type="text/javascript">
+            atOptions = {
+            'key' : '3a3aa245224051cce119687fdb032b32',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 468,
+            'params' : {}
+            };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/3a3aa245224051cce119687fdb032b32/invoke.js"></script>
+        </div>
+        <!-- End Ad Code - Middle Placement -->
+
+        <h1 class="greeting-text">
+            <span class="gradient-text glow">✨ Eid Mubarak!</span>
+            <br>
+            <span class="gradient-text" id="dynamicName">[My Name]</span>
+            <br>
+            May this Eid bring joy, peace, and prosperity to all! ✨
+        </h1>
+
+        <div class="input-section">
+            <input type="text" id="userNameInput" class="name-input" placeholder="Enter your name to personalize your wish">
+            <button id="generateWishBtn" class="action-button">Generate Eid Wish</button>
+        </div>
+
+        <div id="customGreetingOutput" class="custom-greeting-output">
+            <!-- Custom greeting will be displayed here -->
+        </div>
+
+        <button id="shareWhatsappBtn" class="action-button share-button" style="display: none;">
+            <span class="whatsapp-icon"></span> Share on WhatsApp
+        </button>
+
+        <!-- Ad Code - Bottom Placement -->
+        <!-- Placed inside the container, at the very bottom after all other content. -->
+        <div class="ad-container">
+            <script type="text/javascript">
+            atOptions = {
+            'key' : '3a3aa245224051cce119687fdb032b32',
+            'format' : 'iframe',
+            'height' : 60,
+            'width' : 468,
+            'params' : {}
+            };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/3a3aa245224051cce119687fdb032b32/invoke.js"></script>
+        </div>
+        <!-- End Ad Code - Bottom Placement -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userNameInput = document.getElementById('userNameInput');
+            const generateWishBtn = document.getElementById('generateWishBtn');
+            const customGreetingOutput = document.getElementById('customGreetingOutput');
+            const shareWhatsappBtn = document.getElementById('shareWhatsappBtn');
+            const dynamicNameSpan = document.getElementById('dynamicName'); // The span for "[My Name]"
+            
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            const audioIcon = document.getElementById('audioIcon');
+            const volumeSlider = document.getElementById('volumeSlider');
+
+            // Flag to track the first click on Generate Eid Wish button
+            let isFirstGenerateClick = true;
+            const redirectUrl = 'https://www.profitableratecpm.com/xkuphxkqh3?key=3714ac6b2605a7eda4ca84fb7b25595a';
+
+            // --- Audio Controls ---
+            let isMuted = false;
+
+            // Set initial volume from slider
+            backgroundMusic.volume = volumeSlider.value;
+
+            // Handle mute/unmute toggle
+            audioIcon.addEventListener('click', () => {
+                isMuted = !isMuted;
+                backgroundMusic.muted = isMuted;
+                audioIcon.textContent = isMuted ? '🔇' : '🔈';
+                // If unmuting, and music was paused by browser, try playing
+                if (!isMuted && backgroundMusic.paused) {
+                    backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+                }
+            });
+
+            // Handle volume slider change
+            volumeSlider.addEventListener('input', () => {
+                backgroundMusic.volume = volumeSlider.value;
+                // If volume is changed from 0, unmute
+                if (backgroundMusic.volume > 0 && isMuted) {
+                    isMuted = false;
+                    backgroundMusic.muted = false;
+                    audioIcon.textContent = '🔈';
+                } else if (backgroundMusic.volume === 0 && !isMuted) {
+                    isMuted = true;
+                    backgroundMusic.muted = true;
+                    audioIcon.textContent = '🔇';
+                }
+            });
+
+            // Try to play audio on user interaction or after a short delay
+            // This is a common workaround for browser autoplay policies
+            const playAudio = () => {
+                backgroundMusic.play().then(() => {
+                    console.log("Audio started successfully.");
+                }).catch(e => {
+                    console.log("Audio play failed, likely due to autoplay policy:", e);
+                    // No explicit error message needed, as some browsers strictly prevent autoplay
+                });
+                // Remove the event listener after first successful play attempt
+                document.removeEventListener('click', playAudio);
+                document.removeEventListener('touchend', playAudio);
+            };
+
+            // Attach listeners for common user interactions to trigger audio play
+            document.addEventListener('click', playAudio, { once: true });
+            document.addEventListener('touchend', playAudio, { once: true });
+
+
+            // Ensure WhatsApp icon is present using Unicode (no external library)
+            shareWhatsappBtn.querySelector('.whatsapp-icon').textContent = '📲'; // Unicode for mobile phone with arrow
+
+            // Function to update the dynamic greeting name
+            const updateDynamicGreetingName = (name) => {
+                dynamicNameSpan.textContent = name ? `'${name}'` : '[My Name]';
+            };
+
+            // --- Initialize with name from URL if present ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const nameFromUrl = urlParams.get('name');
+
+            if (nameFromUrl) {
+                const decodedName = decodeURIComponent(nameFromUrl);
+                userNameInput.value = decodedName;
+                updateDynamicGreetingName(decodedName); // Update the initial greeting
+                
+                // If a name is in the URL, we assume it's a shared link,
+                // so we want to directly generate the wish, bypassing the first-click redirect.
+                isFirstGenerateClick = false; // Mark it as not the first click
+                // Automatically generate the wish if a name is in the URL
+                // Use a slight delay to ensure other DOM updates are complete
+                setTimeout(() => generateWishBtn.click(), 100); 
+            }
+
+            // Update dynamic name in main greeting as user types
+            userNameInput.addEventListener('input', () => {
+                const currentName = userNameInput.value.trim();
+                updateDynamicGreetingName(currentName);
+            });
+
+
+            // --- Generate Wish Functionality with First Click Redirect ---
+            generateWishBtn.addEventListener('click', () => {
+                if (isFirstGenerateClick) {
+                    isFirstGenerateClick = false; // Set flag to false for subsequent clicks
+                    window.location.href = redirectUrl; // Redirect the user
+                    return; // Stop execution of the rest of the function
+                }
+
+                // If not the first click, proceed with normal wish generation
+                const userName = userNameInput.value.trim();
+                let greetingMessage;
+
+                if (userName) {
+                    greetingMessage = `Eid Mubarak from ${userName}! 🎉 Wishing you happiness and blessings!`;
+                } else {
+                    greetingMessage = `Eid Mubarak! 🎉 Wishing you happiness and blessings!`;
+                }
+
+                customGreetingOutput.textContent = greetingMessage;
+                customGreetingOutput.style.display = 'block'; // Make visible
+                customGreetingOutput.style.opacity = 0; // Reset opacity for fade-in
+                setTimeout(() => customGreetingOutput.style.opacity = 1, 10); // Trigger fade-in
+
+                shareWhatsappBtn.style.display = 'flex'; // Show share button
+            });
+
+            // --- Share on WhatsApp Functionality ---
+            shareWhatsappBtn.addEventListener('click', () => {
+                const customMessage = customGreetingOutput.textContent;
+                const userName = userNameInput.value.trim();
+
+                // Construct the link to share, including the name as a query parameter
+                // This ensures when someone opens the link, the name is pre-filled.
+                // We use origin + pathname to remove any existing query params before adding ours.
+                const baseUrl = window.location.origin + window.location.pathname;
+                const shareLink = `${baseUrl}?name=${encodeURIComponent(userName || 'Friend')}`; // Fallback 'Friend' if name is empty
+
+                // Important: WhatsApp scrapes the raw HTML.
+                // The og:url meta tag should reflect the canonical URL of the page being shared.
+                // While we append a query parameter for pre-filling, the core page is the same.
+                // Setting it here ensures that if WhatsApp *re-scrapes* (less common for transient links),
+                // it sees the current URL for the OG metadata.
+                document.querySelector('meta[property="og:url"]').setAttribute('content', shareLink);
+
+                const whatsappText = encodeURIComponent(`${customMessage}\n\nCreate your own Eid wish: ${shareLink}`);
+                
+                // Construct the WhatsApp share URL
+                const whatsappUrl = `whatsapp://send?text=${whatsappText}`;
+                
+                // Attempt to open WhatsApp
+                window.open(whatsappUrl, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
